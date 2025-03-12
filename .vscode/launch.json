@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/caleb/OneDrive/Documents/GitHub/Computer-Network-Applications-2025",
-      "program": "c:/Users/caleb/OneDrive/Documents/GitHub/Computer-Network-Applications-2025/build/Debug/outDebug",
+      "cwd": "C:/Users/caleb/OneDrive/Documents/GitHub/Computer-Network-Applications-2025/Progamming Assignment 1",
+      "program": "C:/Users/caleb/OneDrive/Documents/GitHub/Computer-Network-Applications-2025/Progamming Assignment 1",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
