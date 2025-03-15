@@ -122,13 +122,20 @@ while True:
         # Create a socket to connect to origin server
         # and store in originServerSocket
         # ~~~~ INSERT CODE ~~~~
+        try:
+            originServerSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        except:
+            print("Failed to create socket for origin server")
+            sys.exit()
         # ~~~~ END CODE INSERT ~~~~
+
         print ('Connecting to:\t\t' + hostname + '\n')
         try:
             # Get the IP address for a hostname
             address = socket.gethostbyname(hostname)
             # Connect to the origin server
             # ~~~~ INSERT CODE ~~~~
+            originServerSocket.connect((address,80))
             # ~~~~ END CODE INSERT ~~~~
             print ('Connected to origin Server')
             originServerRequest = ''
@@ -138,7 +145,10 @@ while True:
             # originServerRequest is the first line in the request and
             # originServerRequestHeader is the second line in the request
             # ~~~~ INSERT CODE ~~~~
+            originServerRequest = f"{method} {resource} {version}"
+            originServerRequestHeader = f"Host: {hostname}\r\nConnection:close"
             # ~~~~ END CODE INSERT ~~~~
+            
             # Construct the request to send to the origin server
             request = originServerRequest + '\r\n' + originServerRequestHeader + '\r\n\r\n'
             # Request the web resource from origin server
