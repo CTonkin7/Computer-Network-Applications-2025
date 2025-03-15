@@ -13,10 +13,12 @@ parser.add_argument('port', help='the port number of the proxy server')
 args = parser.parse_args()
 proxyHost = args.hostname
 proxyPort = int(args.port)
+
 # Create a server socket, bind it to a port and start listening
 try:
     # Create a server socket
     # ~~~~ INSERT CODE ~~~~
+    serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # ~~~~ END CODE INSERT ~~~~
     print ('Created socket')
 except:
@@ -25,6 +27,7 @@ except:
 try:
     # Bind the the server socket to a host and port
     # ~~~~ INSERT CODE ~~~~
+    serverSocket.bind((proxyHost,proxyPort))
     # ~~~~ END CODE INSERT ~~~~
     print ('Port is bound')
 except:
@@ -33,6 +36,7 @@ except:
 try:
     # Listen on the server socket
     # ~~~~ INSERT CODE ~~~~
+    serverSocket.listen(10)
     # ~~~~ END CODE INSERT ~~~~
     print ('Listening to socket')
 except:
@@ -45,6 +49,7 @@ while True:
     # Accept connection from client and store in the clientSocket
     try:
         # ~~~~ INSERT CODE ~~~~
+        clientSocket, clientAddress = serverSocket.accept()
         # ~~~~ END CODE INSERT ~~~~
         print ('Received a connection')
     except:
@@ -52,29 +57,42 @@ while True:
         sys.exit()
     # Get HTTP request from client
     # and store it in the variable: message_bytes
+    try:
     # ~~~~ INSERT CODE ~~~~
+        message_bytes = clientSocket.recv(BUFFER_SIZE)
     # ~~~~ END CODE INSERT ~~~~
+    except:
+        print('Failed to receive Request')
+        sys.exit()
+
+
     message = message_bytes.decode('utf-8')
     print ('Received request:')
     print ('< ' + message)
+
     # Extract the method, URI and version of the HTTP client request
     requestParts = message.split()
     method = requestParts[0]
     URI = requestParts[1]
     version = requestParts[2]
+
     print ('Method:\t\t' + method)
     print ('URI:\t\t' + URI)
     print ('Version:\t' + version)
     print ('')
+
     # Get the requested resource from URI
     # Remove http protocol from the URI
     URI = re.sub('^(/?)http(s?)://', '', URI, count=1)
     # Remove parent directory changes - security
+
     URI = URI.replace('/..', '')
     # Split hostname from resource name
+
     resourceParts = URI.split('/', 1)
     hostname = resourceParts[0]
     resource = '/'
+
     if len(resourceParts) == 2:
         # Resource is absolute URI with hostname and resource
         resource = resource + resourceParts[1]
@@ -93,6 +111,7 @@ while True:
         # ProxyServer finds a cache hit
         # Send back response to client
         # ~~~~ INSERT CODE ~~~~
+        clientSocket.sendall(cacheData)
         # ~~~~ END CODE INSERT ~~~~
         cacheFile.close()
         print ('Sent to the client:')
