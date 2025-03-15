@@ -148,7 +148,7 @@ while True:
             originServerRequest = f"{method} {resource} {version}"
             originServerRequestHeader = f"Host: {hostname}\r\nConnection:close"
             # ~~~~ END CODE INSERT ~~~~
-            
+
             # Construct the request to send to the origin server
             request = originServerRequest + '\r\n' + originServerRequestHeader + '\r\n\r\n'
             # Request the web resource from origin server
@@ -163,9 +163,16 @@ while True:
             print('Request sent to origin server\n')
             # Get the response from the origin server
             # ~~~~ INSERT CODE ~~~~
+            response = b""
+            while True:
+                chunk = originServerSocket.recv(BUFFER_SIZE)
+                if not chunk:
+                    break
+                response += chunk
             # ~~~~ END CODE INSERT ~~~~
             # Send the response to the client
             # ~~~~ INSERT CODE ~~~~
+            clientSocket.sendall(response)
             # ~~~~ END CODE INSERT ~~~~
             # Create a new file in the cache for the requested file.
             cacheDir, file = os.path.split(cacheLocation)
@@ -175,6 +182,7 @@ while True:
             cacheFile = open(cacheLocation, 'wb')
             # Save origin server response in the cache file
             # ~~~~ INSERT CODE ~~~~
+            cache.File.write(response)
             # ~~~~ END CODE INSERT ~~~~
             cacheFile.close()
             print ('cache file closed')
