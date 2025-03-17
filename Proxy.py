@@ -36,7 +36,7 @@ except:
 try:
     # Listen on the server socket
     # ~~~~ INSERT CODE ~~~~
-    serverSocket.listen(10)
+    serverSocket.listen(1)
     # ~~~~ END CODE INSERT ~~~~
     print ('Listening to socket')
 except:
@@ -163,6 +163,7 @@ while True:
             print('Request sent to origin server\n')
             # Get the response from the origin server
             # ~~~~ INSERT CODE ~~~~
+            
             response = b""
             while True:
                 chunk = originServerSocket.recv(BUFFER_SIZE)
@@ -170,10 +171,12 @@ while True:
                     break
                 response += chunk
             # ~~~~ END CODE INSERT ~~~~
+
             # Send the response to the client
             # ~~~~ INSERT CODE ~~~~
             clientSocket.sendall(response)
             # ~~~~ END CODE INSERT ~~~~
+            
             # Create a new file in the cache for the requested file.
             cacheDir, file = os.path.split(cacheLocation)
             print ('cached directory ' + cacheDir)
