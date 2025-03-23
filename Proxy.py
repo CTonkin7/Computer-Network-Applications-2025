@@ -131,11 +131,8 @@ while True:
 
         print ('Connecting to:\t\t' + hostname + '\n')
         try:
-            print('1\n')
             # Get the IP address for a hostname
             address = socket.gethostbyname(hostname)
-            print('Resolved Hostname to:', address)
-            print('2\n')
             # Connect to the origin server
             # ~~~~ INSERT CODE ~~~~
             originServerSocket.connect((address,80))
@@ -169,14 +166,6 @@ while True:
             # ~~~~ INSERT CODE ~~~~
             
             response = originServerSocket.recv(BUFFER_SIZE)
-
-            #response = b""
-            #while True:
-             #   chunk = originServerSocket.recv(BUFFER_SIZE)
-              #  if not chunk:
-               #     break
-                #response += chunk
-            
             # ~~~~ END CODE INSERT ~~~~
             
             # Send the response to the client
