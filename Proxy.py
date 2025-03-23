@@ -36,7 +36,7 @@ except:
 try:
     # Listen on the server socket
     # ~~~~ INSERT CODE ~~~~
-    serverSocket.listen(1)
+    serverSocket.listen(5)
     # ~~~~ END CODE INSERT ~~~~
     print ('Listening to socket')
 except:
@@ -131,8 +131,11 @@ while True:
 
         print ('Connecting to:\t\t' + hostname + '\n')
         try:
+            print('1\n')
             # Get the IP address for a hostname
             address = socket.gethostbyname(hostname)
+            print('Resolved Hostname to:', address)
+            print('2\n')
             # Connect to the origin server
             # ~~~~ INSERT CODE ~~~~
             originServerSocket.connect((address,80))
@@ -148,7 +151,7 @@ while True:
             originServerRequest = f"{method} {resource} {version}"
             originServerRequestHeader = f"Host: {hostname}\r\nConnection:close"
             # ~~~~ END CODE INSERT ~~~~
-
+            
             # Construct the request to send to the origin server
             request = originServerRequest + '\r\n' + originServerRequestHeader + '\r\n\r\n'
             # Request the web resource from origin server
@@ -161,17 +164,21 @@ while True:
                 print ('Forward request to origin failed')
                 sys.exit()
             print('Request sent to origin server\n')
+            
             # Get the response from the origin server
             # ~~~~ INSERT CODE ~~~~
             
-            response = b""
-            while True:
-                chunk = originServerSocket.recv(BUFFER_SIZE)
-                if not chunk:
-                    break
-                response += chunk
-            # ~~~~ END CODE INSERT ~~~~
+            response = originServerSocket.recv(BUFFER_SIZE)
 
+            #response = b""
+            #while True:
+             #   chunk = originServerSocket.recv(BUFFER_SIZE)
+              #  if not chunk:
+               #     break
+                #response += chunk
+            
+            # ~~~~ END CODE INSERT ~~~~
+            
             # Send the response to the client
             # ~~~~ INSERT CODE ~~~~
             clientSocket.sendall(response)
@@ -189,13 +196,18 @@ while True:
             # ~~~~ END CODE INSERT ~~~~
             cacheFile.close()
             print ('cache file closed')
+            
             # finished communicating with origin server - shutdown socket writes
             print ('origin response received. Closing sockets')
             originServerSocket.close()
             clientSocket.shutdown(socket.SHUT_WR)
             print ('client socket shutdown for writing')
+            
         except OSError as err:
             print ('origin server request failed. ' + err.strerror)
+            clientSocket.sendall(b'HTTP/1.1 502 Bad Gateway\r\n\r\n')
+            clientSocket.close()
+            continue
     try:
         clientSocket.close()
     except:
