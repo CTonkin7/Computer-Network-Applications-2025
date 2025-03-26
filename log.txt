@@ -1,0 +1,106 @@
+commit 82ab09192e999ddb31e9e472307847175d77cc59
+Merge: 88eee6f fc5c8a8
+Author: “[firstname <a1850062@adelaide.edu.au>
+Date:   Sun Mar 23 15:46:41 2025 +1030
+
+    testing code using given links
+
+commit 88eee6fcec0bf986b329fca0456cdf46b614f60f
+Author: “[firstname <a1850062@adelaide.edu.au>
+Date:   Sun Mar 23 15:41:39 2025 +1030
+
+    update and clean code
+
+commit ddc6ab4162f1167e97c94e2bc73d99f0e6aa1460
+Author: “[firstname <a1850062@adelaide.edu.au>
+Date:   Sun Mar 23 14:23:31 2025 +1030
+
+    update listen time
+    
+    update listen time
+
+commit fc5c8a8d97d1473febe35488dbd49cdd930798b0
+Author: CTonkin7 <a1850062@adelaide.edu.au>
+Date:   Tue Mar 18 10:29:00 2025 +1030
+
+    testing code with badssl.com
+
+commit 4f6d92101c2438183f485979f87d88ab9dae1475
+Author: CTonkin7 <a1850062@adelaide.edu.au>
+Date:   Tue Mar 18 10:26:52 2025 +1030
+
+    testing code using testing method given
+    
+    testing code using testing method given
+
+commit 1318e50528af6a7d9a9a01da2a1f6295192cdb4d
+Author: “[firstname <a1850062@adelaide.edu.au>
+Date:   Mon Mar 17 11:26:52 2025 +1030
+
+    Update Proxy.py
+
+commit 9e8425209910f2a4fbbd6aa26c3f7e36f1a2dc54
+Author: “[firstname <a1850062@adelaide.edu.au>
+Date:   Sun Mar 16 12:55:49 2025 +1030
+
+    Error found where I used a full stop unnecessarily. Fixed.
+
+commit 6a7186d56a7f1227f7292a02f8bd60c8bd0edf9c
+Author: “[firstname <a1850062@adelaide.edu.au>
+Date:   Sun Mar 16 12:38:57 2025 +1030
+
+    Move proxy file out of submission folder to test if that is why gradescope is not working
+
+commit d205f5e204884ff61770e5ef9e6f9ab3084bf9f7
+Author: “[firstname <a1850062@adelaide.edu.au>
+Date:   Sun Mar 16 12:34:44 2025 +1030
+
+    move file out of folder to allow gradescope to work
+
+commit 97f68f2b409eeaa18072b6e86b1b065d1a7c9512
+Author: “[firstname <a1850062@adelaide.edu.au>
+Date:   Sun Mar 16 12:32:58 2025 +1030
+
+    rename file to proxy.py
+
+commit 419cfa7ec82202a10cb37e217ebc3a30f016ee75
+Author: “[firstname <a1850062@adelaide.edu.au>
+Date:   Sat Mar 15 16:40:35 2025 +1030
+
+    created response from origin server and cache
+
+commit e7420d94ad9b1b8280804cbe3a81d67538c703f6
+Author: “[firstname <a1850062@adelaide.edu.au>
+Date:   Sat Mar 15 16:16:24 2025 +1030
+
+    creating origin server request and header
+
+commit 37c4449f146a9f630e44427a89145a9ae327b4ef
+Author: “[firstname <a1850062@adelaide.edu.au>
+Date:   Sat Mar 15 15:21:42 2025 +1030
+
+    creating sockets and interactivity
+
+commit 5cce0271ba7ed1e04fd9816ce70247672f873ae5
+Author: “[firstname <a1850062@adelaide.edu.au>
+Date:   Wed Mar 12 21:48:01 2025 +1030
+
+    Paste skeleton code into file. Correctly Indent all lines.
+
+commit 68a331ba35470da0715cebf85486f68cb89e3857
+Author: “[firstname <a1850062@adelaide.edu.au>
+Date:   Wed Mar 12 21:11:27 2025 +1030
+
+    cleaning up test files 2
+
+commit dde90564e99d3cb15cd12378451c570c6cae3236
+Author: CTonkin7 <a1850062@adelaide.edu.au>
+Date:   Sun Mar 9 18:44:40 2025 +1030
+
+    Create assignmentfile.cpp
+
+commit d92e2f4a56aa90709ac38e1f86e676aa452069e3
+Author: CTonkin7 <a1850062@adelaide.edu.au>
+Date:   Sun Mar 9 18:40:47 2025 +1030
+
+    hello
