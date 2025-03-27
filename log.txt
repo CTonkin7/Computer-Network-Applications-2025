@@ -1,3 +1,9 @@
+commit 5250df9f01b437e519a5a105a851968be291cd9d
+Author: “[firstname <a1850062@adelaide.edu.au>
+Date:   Wed Mar 26 10:56:29 2025 +1030
+
+    add log.txt file to show commits and progress
+
 commit 82ab09192e999ddb31e9e472307847175d77cc59
 Merge: 88eee6f fc5c8a8
 Author: “[firstname <a1850062@adelaide.edu.au>
@@ -41,49 +47,49 @@ Date:   Mon Mar 17 11:26:52 2025 +1030
 
 commit 9e8425209910f2a4fbbd6aa26c3f7e36f1a2dc54
 Author: “[firstname <a1850062@adelaide.edu.au>
-Date:   Sun Mar 16 12:55:49 2025 +1030
+Date:   Sat Mar 15 18:55:49 2025 +1030
 
     Error found where I used a full stop unnecessarily. Fixed.
 
 commit 6a7186d56a7f1227f7292a02f8bd60c8bd0edf9c
 Author: “[firstname <a1850062@adelaide.edu.au>
-Date:   Sun Mar 16 12:38:57 2025 +1030
+Date:   Sat Mar 15 18:38:57 2025 +1030
 
     Move proxy file out of submission folder to test if that is why gradescope is not working
 
 commit d205f5e204884ff61770e5ef9e6f9ab3084bf9f7
 Author: “[firstname <a1850062@adelaide.edu.au>
-Date:   Sun Mar 16 12:34:44 2025 +1030
+Date:   Sat Mar 15 18:34:44 2025 +1030
 
     move file out of folder to allow gradescope to work
 
 commit 97f68f2b409eeaa18072b6e86b1b065d1a7c9512
 Author: “[firstname <a1850062@adelaide.edu.au>
-Date:   Sun Mar 16 12:32:58 2025 +1030
+Date:   Sat Mar 15 18:32:58 2025 +1030
 
     rename file to proxy.py
 
 commit 419cfa7ec82202a10cb37e217ebc3a30f016ee75
 Author: “[firstname <a1850062@adelaide.edu.au>
-Date:   Sat Mar 15 16:40:35 2025 +1030
+Date:   Sat Mar 15 16:10:35 2025 +1030
 
     created response from origin server and cache
 
 commit e7420d94ad9b1b8280804cbe3a81d67538c703f6
 Author: “[firstname <a1850062@adelaide.edu.au>
-Date:   Sat Mar 15 16:16:24 2025 +1030
+Date:   Thurs Mar 13 15:26:24 2025 +1030
 
     creating origin server request and header
 
 commit 37c4449f146a9f630e44427a89145a9ae327b4ef
 Author: “[firstname <a1850062@adelaide.edu.au>
-Date:   Sat Mar 15 15:21:42 2025 +1030
+Date:   Thurs Mar 13 14:21:42 2025 +1030
 
     creating sockets and interactivity
 
 commit 5cce0271ba7ed1e04fd9816ce70247672f873ae5
 Author: “[firstname <a1850062@adelaide.edu.au>
-Date:   Wed Mar 12 21:48:01 2025 +1030
+Date:   Thurs Mar 13 11:48:01 2025 +1030
 
     Paste skeleton code into file. Correctly Indent all lines.
 
