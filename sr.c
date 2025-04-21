@@ -66,8 +66,8 @@ static int acked[WINDOWSIZE];
 static int timer_status[WINDOWSIZE];
 
 /* Receiver buffer and received initialisations */
-static struct pkt recv_buffer[WINDOWSIZE];
-static int received[WINDOWSIZE];
+static struct pkt recv_buffer[SEQSPACE];
+static int received[SEQSPACE];
 
 /* called from layer 5 (application layer), passed the message to be sent to other side */
 void A_output(struct msg message)
@@ -201,7 +201,8 @@ void A_init(void)
   windowcount = 0;
 
   /* Initialise Selective Repeat Tracking arrays with ACK status and timer status*/
-  for (i = 0; i < WINDOWSIZE; i++) {
+  for (i = 0; i < SEQSPACE; i++) {
+    received[i] = 0;
     acked[i] = 0; /* not ACKed yet */
     timer_status[i] = 0; /* timer not running yet */
   }
@@ -249,7 +250,7 @@ void B_input(struct pkt packet)
     ackpkt.checksum = ComputeChecksum(ackpkt);
     tolayer3(B,ackpkt);
 
-    while (received[expectedseqnum % WINDOWSIZE]) {
+    while (received[expectedseqnum % SEQSPACE]) {
       tolayer5(B, recv_buffer[expectedseqnum % WINDOWSIZE].payload);
       received[expectedseqnum % WINDOWSIZE] = 0;
       expectedseqnum = (expectedseqnum + 1) % SEQSPACE;
