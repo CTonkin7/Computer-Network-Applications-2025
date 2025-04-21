@@ -27,6 +27,14 @@
 #define SEQSPACE 7      /* the min sequence space for GBN must be at least windowsize + 1 */
 #define NOTINUSE (-1)   /* used to fill header fields that are not being used */
 
+// Sender ACK and Timer status initialisation
+static int acked[WINDOWSIZE];
+static int timer_status[WINDOWSIZE];
+
+// Receiver buffer and received initialisations
+static struct pkt recv_buffer[WINDOWSIZE];
+static int received[WINDOWSIZE];
+
 /* generic procedure to compute the checksum of a packet.  Used by both sender and receiver  
    the simulator will overwrite part of your packet with 'z's.  It will not overwrite your 
    original checksum.  This procedure must generate a different checksum to the original if
