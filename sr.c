@@ -27,14 +27,6 @@
 #define SEQSPACE 7      /* the min sequence space for GBN must be at least windowsize + 1 */
 #define NOTINUSE (-1)   /* used to fill header fields that are not being used */
 
-// Sender ACK and Timer status initialisation
-static int acked[WINDOWSIZE];
-static int timer_status[WINDOWSIZE];
-
-// Receiver buffer and received initialisations
-static struct pkt recv_buffer[WINDOWSIZE];
-static int received[WINDOWSIZE];
-
 /* generic procedure to compute the checksum of a packet.  Used by both sender and receiver  
    the simulator will overwrite part of your packet with 'z's.  It will not overwrite your 
    original checksum.  This procedure must generate a different checksum to the original if
@@ -68,6 +60,14 @@ static struct pkt buffer[WINDOWSIZE];  /* array for storing packets waiting for 
 static int windowfirst, windowlast;    /* array indexes of the first/last packet awaiting ACK */
 static int windowcount;                /* the number of packets currently awaiting an ACK */
 static int A_nextseqnum;               /* the next sequence number to be used by the sender */
+
+// Sender ACK and Timer status initialisation
+static int acked[WINDOWSIZE];
+static int timer_status[WINDOWSIZE];
+
+// Receiver buffer and received initialisations
+static struct pkt recv_buffer[WINDOWSIZE];
+static int received[WINDOWSIZE];
 
 /* called from layer 5 (application layer), passed the message to be sent to other side */
 void A_output(struct msg message)
@@ -160,19 +160,23 @@ void A_input(struct pkt packet)
 /* called when A's timer goes off */
 void A_timerinterrupt(void)
 {
-  int i;
-
-  if (TRACE > 0)
-    printf("----A: time out,resend packets!\n");
+  if (TRACE > 0){
+    printf("----A: Timer Expired, check for packet to resend\n");
+  }
 
   for(i=0; i<windowcount; i++) {
-
-    if (TRACE > 0)
-      printf ("---A: resending packet %d\n", (buffer[(windowfirst+i) % WINDOWSIZE]).seqnum);
-
-    tolayer3(A,buffer[(windowfirst+i) % WINDOWSIZE]);
-    packets_resent++;
-    if (i==0) starttimer(A,RTT);
+    int idx = (windowfirst + 1) % WINDOWSIZE;
+    int seq = buffer[idx].seqnum;
+    
+    if ((acked[seq % WINDOWSIZE] == 0 )&& (timer_status[seq % WINDOWSIZE] == 1)){
+      if (TRACE > 0){
+        printf("----A: Resending packet %d\n", seq);
+      }
+      tolayer3(A,buffer[idx]);
+      packets_resent++;
+      starttimer(A,RTT); // restart timer
+      break; // send only one packet on timeout
+    }
   }
 }       
 
