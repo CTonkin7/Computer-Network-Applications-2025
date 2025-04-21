@@ -137,7 +137,7 @@ void A_input(struct pkt packet)
       printf("----A: Marked Packed %d as acknowledged\n", acknum);
 
       // slide window if base is acked
-      while (acked[biffer[windowfirst].seqnum % WINDOWSIZE] && windowcount > 0) {
+      while (acked[buffer[windowfirst].seqnum % WINDOWSIZE] && windowcount > 0) {
         windowfirst = (windowfirst + 1) % WINDOWSIZE;
         windowcount--;
       }
@@ -165,7 +165,7 @@ void A_timerinterrupt(void)
   }
 
   for(i=0; i<windowcount; i++) {
-    int idx = (windowfirst + 1) % WINDOWSIZE;
+    int idx = (windowfirst + i) % WINDOWSIZE;
     int seq = buffer[idx].seqnum;
     
     if ((acked[seq % WINDOWSIZE] == 0 )&& (timer_status[seq % WINDOWSIZE] == 1)){
