@@ -134,7 +134,7 @@ void A_input(struct pkt packet)
       timer_status[acknum % WINDOWSIZE] = 0; // stop timer after ACK received
       
       if (TRACE > 0)
-      printf("----A: Marked Packed %d as acknowledged\n", acknum);
+      printf("----A: Marked Packet %d as acknowledged\n", acknum);
 
       // slide window if base is acked
       while (acked[buffer[windowfirst].seqnum % WINDOWSIZE] && windowcount > 0) {
@@ -214,7 +214,7 @@ static int B_nextseqnum;   /* the sequence number for the next packets sent by B
 /* called from layer 3, when a packet arrives for layer 4 at B*/
 void B_input(struct pkt packet)
 {
-  struct pkt sendpkt;
+  struct pkt ackpkt;
   int i;
 
   // check for corruption:
@@ -222,7 +222,7 @@ void B_input(struct pkt packet)
     int seq = packet.seqnum;
 
     if (received[seq % WINDOWSIZE] == 0){
-      received[seq % WINDOWSIZE] == 1;
+      received[seq % WINDOWSIZE] = 1;
       recv_buffer[seq % WINDOWSIZE] = packet;
 
       if (TRACE > 0) {
@@ -236,11 +236,12 @@ void B_input(struct pkt packet)
     
     ackpkt.seqnum = B_nextseqnum;
     ackpkt.acknum = seq;
-    B_nextseqnum = (b_nextseqnum + 1) % 2;
-    for (i = 0; i < 20; i++){
+    B_nextseqnum = (B_nextseqnum + 1) % 2;
+
+    for (i = 0; i < 20; i++) {
       ackpkt.payload[i] = '0';
     }
-    ackpkt.checksum = ComputeCHecksum(ackpkt);
+    ackpkt.checksum = ComputeChecksum(ackpkt);
     tolayer3(B,ackpkt);
 
     while (received[expectedseqnum % WINDOWSIZE]) {
