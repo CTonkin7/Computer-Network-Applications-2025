@@ -194,6 +194,13 @@ void A_init(void)
 		     so initially this is set to -1
 		   */
   windowcount = 0;
+
+  // Initialise Selective Repeat Tracking arrays with ACK status and timer status
+  for (int i = 0; i < WINDOWSIZE; i++) {
+    acked[i] = 0; // not ACKed yet
+    timer_status[i] = 0; // timer not running yet
+  }
+
 }
 
 
