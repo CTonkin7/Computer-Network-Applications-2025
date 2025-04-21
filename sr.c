@@ -97,8 +97,9 @@ void A_output(struct msg message)
     timer_status[sendpkt.seqnum % WINDOWSIZE] = 1; /* create status of timer */
 
     /* send out packet */
-    if (TRACE > 0)
+    if (TRACE > 0){
       printf("Sending packet %d to layer 3\n", sendpkt.seqnum);
+    }
     tolayer3 (A, sendpkt);
 
     starttimer(A,RTT); /* begin timer for packet. */
@@ -120,14 +121,13 @@ In this practical this will always be an ACK as B never sends data.
 */
 void A_input(struct pkt packet)
 {
-
+  int acknum = packet.acknum; /* initialise acknumber variable to current packet*/
   /* if received ACK is not corrupted */ 
   if (!IsCorrupted(packet)) {
-    if (TRACE > 0)
+    if (TRACE > 0) {
       printf("----A: uncorrupted ACK %d is received\n",packet.acknum);
+    }
     total_ACKs_received++;
-
-    int acknum = packet.acknum; /* initialise acknumber variable to current packet*/
 
     if (acked[acknum % WINDOWSIZE] == 0) {
       acked[acknum % WINDOWSIZE] = 1; /* mark received ACK*/
@@ -160,13 +160,17 @@ void A_input(struct pkt packet)
 /* called when A's timer goes off */
 void A_timerinterrupt(void)
 {
+  int i;
+  int idx;
+  int seq;
+
   if (TRACE > 0){
     printf("----A: Timer Expired, check for packet to resend\n");
   }
 
   for(i=0; i<windowcount; i++) {
-    int idx = (windowfirst + i) % WINDOWSIZE;
-    int seq = buffer[idx].seqnum;
+    idx = (windowfirst + i) % WINDOWSIZE;
+    seq = buffer[idx].seqnum;
     
     if ((acked[seq % WINDOWSIZE] == 0 )&& (timer_status[seq % WINDOWSIZE] == 1)){
       if (TRACE > 0){
@@ -186,6 +190,7 @@ void A_timerinterrupt(void)
 /* entity A routines are called. You can use it to do any initialization */
 void A_init(void)
 {
+  int i;
   /* initialise A's window, buffer and sequence number */
   A_nextseqnum = 0;  /* A starts with seq num 0, do not change this */
   windowfirst = 0;
@@ -196,9 +201,9 @@ void A_init(void)
   windowcount = 0;
 
   /* Initialise Selective Repeat Tracking arrays with ACK status and timer status*/
-  for (int i = 0; i < WINDOWSIZE; i++) {
-    acked[i] = 0; // not ACKed yet
-    timer_status[i] = 0; // timer not running yet
+  for (i = 0; i < WINDOWSIZE; i++) {
+    acked[i] = 0; /* not ACKed yet */
+    timer_status[i] = 0; /* timer not running yet */
   }
 
 }
