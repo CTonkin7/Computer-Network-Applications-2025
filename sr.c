@@ -227,9 +227,11 @@ void B_input(struct pkt packet)
   if (!IsCorrupted(packet)){
     int seq = packet.seqnum;
 
-    if (received[seq % WINDOWSIZE] == 0){
-      received[seq % WINDOWSIZE] = 1;
-      recv_buffer[seq % WINDOWSIZE] = packet;
+    if (received[seq % SEQSPACE] == 0){
+      received[seq % SEQSPACE] = 1;
+      recv_buffer[seq % SEQSPACE] = packet;
+
+      packets_received++;
 
       if (TRACE > 0) {
         printf("----B: Packet %d received and buffered\n", seq);
@@ -251,8 +253,8 @@ void B_input(struct pkt packet)
     tolayer3(B,ackpkt);
 
     while (received[expectedseqnum % SEQSPACE]) {
-      tolayer5(B, recv_buffer[expectedseqnum % WINDOWSIZE].payload);
-      received[expectedseqnum % WINDOWSIZE] = 0;
+      tolayer5(B, recv_buffer[expectedseqnum % SEQSPACE].payload);
+      received[expectedseqnum % SEQSPACE] = 0;
       expectedseqnum = (expectedseqnum + 1) % SEQSPACE;
     }
   } else {
