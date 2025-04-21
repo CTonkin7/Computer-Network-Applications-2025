@@ -93,14 +93,15 @@ void A_output(struct msg message)
     buffer[windowlast] = sendpkt;
     windowcount++;
 
+    acked[sendpkt.seqnum % WINDOWSIZE] = 0; // track current ACK
+    timer_status[sendpkt.seqnum % WINDOWSIZE] = 1; // creater status of timer
+
     /* send out packet */
     if (TRACE > 0)
       printf("Sending packet %d to layer 3\n", sendpkt.seqnum);
     tolayer3 (A, sendpkt);
 
-    /* start timer if first packet in window */
-    if (windowcount == 1)
-      starttimer(A,RTT);
+    starttimer(A,RTT); // begin timer for packet.
 
     /* get next sequence number, wrap back to 0 */
     A_nextseqnum = (A_nextseqnum + 1) % SEQSPACE;  
