@@ -77,7 +77,7 @@ void A_output(struct msg message)
 
   /* if not blocked waiting on ACK */
   if ( windowcount < WINDOWSIZE) {
-    if (TRACE > 1)
+    if (TRACE > 0)
       printf("----A: New message arrives, send window is not full, send new messge to layer3!\n");
 
     /* create packet */
@@ -102,7 +102,7 @@ void A_output(struct msg message)
       printf("Sending packet %d to layer 3\n", sendpkt.seqnum);
     }
     tolayer3 (A, sendpkt);
-    starttimer(A,RTT); /* begin timer for packet. */
+    starttimer(A,RTT + A_nextseqnum); /* begin timer for packet. */
 
     /* get next sequence number, wrap back to 0 */
     A_nextseqnum = (A_nextseqnum + 1) % SEQSPACE;  
@@ -129,26 +129,22 @@ void A_input(struct pkt packet)
     if (TRACE > 0) {
       printf("----A: uncorrupted ACK %d is received\n",packet.acknum);
     }
-    printf("ACK counter before increment: %d\n", new_ACKs);
-    new_ACKs++;
-    printf("ACK counter after increament:%d\n", new_ACKs);
-
+    
     if (!acked[acknum]) {
       acked[acknum] = 1; /* mark received ACK*/
+      new_ACKs++;
+      stoptimer(A);
       timer_status[acknum] = 0; /* stop timer after ACK received*/
       
       if (TRACE > 0) {
       printf("----A: Marked Packet %d as acknowledged\n", acknum);
       }
       /* slide window if base is acked */
-      while (acked[buffer[windowfirst].seqnum] && windowcount > 0) {
+      while (acked[windowfirst] && windowcount > 0) {
         windowfirst = (windowfirst + 1) % SEQSPACE;
         windowcount--;
       }
 
-      stoptimer(A); /* End timer after acknowledgement */
-      if(windowcount > 0) /* begin new timer */
-        starttimer(A,RTT);
     } else {
       if (TRACE > 0)
         printf("----A: duplicate ACK received for packet %d\n", acknum);
@@ -172,19 +168,18 @@ void A_timerinterrupt(void)
     printf("----A: Timer Expired, check for packet to resend\n");
   }
 
-  for(i=0; i<windowcount; i++) {
-    int idx = (windowfirst + i) % WINDOWSIZE;
-    int seq = buffer[idx].seqnum;
+  for(i=0; i<SEQSPACE; i++) {
+    /*int idx = (windowfirst + i) % WINDOWSIZE;
+    int seq = buffer[idx].seqnum; */
 
-    if (acked[seq % SEQSPACE] == 0){
+    if (timer_status[i] && !acked[i]){
       if (TRACE > 0){
         printf("----A: Resending packet %d\n", seq);
       }
-      tolayer3(A,buffer[idx]);
+      tolayer3(A,buffer[i]);
+      starttimer(A,RTT + i); /* restart timer */
       packets_resent++;
-      stoptimer(A);
-      starttimer(A,RTT); /* restart timer */
-      break; /*send only one packet on timeout */
+      /*break; send only one packet on timeout */
     }
   }
 }       
