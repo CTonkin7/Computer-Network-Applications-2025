@@ -39,9 +39,9 @@ int ComputeChecksum(struct pkt packet)
 
   checksum = packet.seqnum;
   checksum += packet.acknum;
-  for ( i=0; i<20; i++ ) 
+  for ( i=0; i<20; i++ ) {
     checksum += (int)(packet.payload[i]);
-
+  }
   return checksum;
 }
 
@@ -119,6 +119,8 @@ void A_output(struct msg message)
 /* called from layer 3, when a packet arrives for layer 4 
 In this practical this will always be an ACK as B never sends data.
 */
+
+
 void A_input(struct pkt packet)
 {
   int acknum = packet.acknum; /* initialise acknumber variable to current packet*/
@@ -127,7 +129,9 @@ void A_input(struct pkt packet)
     if (TRACE > 0) {
       printf("----A: uncorrupted ACK %d is received\n",packet.acknum);
     }
-    total_ACKs_received++;
+    printf("ACK counter before increment: %d\n", new_ACKs);
+    new_ACKs++;
+    printf("ACK counter after increament:%d\n", new_ACKs);
 
     if (!acked[acknum]) {
       acked[acknum] = 1; /* mark received ACK*/
@@ -247,7 +251,7 @@ void B_input(struct pkt packet)
     ackpkt.acknum = seq;
 
     for (i = 0; i < 20; i++) {
-      ackpkt.payload[i] = '0';
+      ackpkt.payload[i] = 0;
     }
     ackpkt.checksum = ComputeChecksum(ackpkt);
     tolayer3(B,ackpkt);
