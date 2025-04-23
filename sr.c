@@ -47,10 +47,7 @@ int ComputeChecksum(struct pkt packet)
 
 bool IsCorrupted(struct pkt packet)
 {
-  if (packet.checksum == ComputeChecksum(packet))
-    return (false);
-  else
-    return (true);
+  return packet.checksum != ComputeChecksum(packet);
 }
 
 
@@ -133,12 +130,12 @@ void A_input(struct pkt packet)
     if (!acked[acknum]) {
       acked[acknum] = 1; /* mark received ACK*/
       new_ACKs++;
-      stoptimer(A);
       timer_status[acknum] = 0; /* stop timer after ACK received*/
       
       if (TRACE > 0) {
       printf("----A: ACK %d is not a duplicate\n", acknum);
       }
+      stoptimer(A);
       /* slide window if base is acked */
       while (acked[windowfirst] && windowcount > 0) {
         windowfirst = (windowfirst + 1) % SEQSPACE;
@@ -161,24 +158,21 @@ void A_input(struct pkt packet)
 void A_timerinterrupt(void)
 {
   int i;
-  int idx;
-  int seq;
 
   if (TRACE > 0){
     printf("----A: Timer Expired, check for packet to resend\n");
   }
 
   for(i=0; i<SEQSPACE; i++) {
-    /*int idx = (windowfirst + i) % WINDOWSIZE;
-    int seq = buffer[idx].seqnum; */
 
     if (timer_status[i] && !acked[i]){
       if (TRACE > 0){
         printf("----A: Resending packet %d\n", i);
       }
       tolayer3(A,buffer[i]);
-      starttimer(A,RTT + i); /* restart timer */
+      starttimer(A,RTT); /* restart timer */
       packets_resent++;
+      break;
       /*break; send only one packet on timeout */
     }
   }
@@ -230,7 +224,6 @@ void B_input(struct pkt packet)
     if (!received[seq]){
       received[seq] = 1;
       recv_buffer[seq] = packet;
-
       packets_received++;
 
       if (TRACE > 0) {
@@ -268,8 +261,12 @@ void B_input(struct pkt packet)
 /* entity B routines are called. You can use it to do any initialization */
 void B_init(void)
 {
+  int i;
   expectedseqnum = 0;
   B_nextseqnum = 1;
+  for (i=0;i<SEQSPACE;i++){
+    received[i] = 0;
+  }
 }
 
 /******************************************************************************
