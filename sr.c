@@ -161,20 +161,16 @@ void A_input(struct pkt packet)
 void A_timerinterrupt(void)
 {
   int i;
-  int idx;
-  int seq;
 
   if (TRACE > 0){
     printf("----A: Timer Expired, check for packet to resend\n");
   }
 
   for(i=0; i<SEQSPACE; i++) {
-    /*int idx = (windowfirst + i) % WINDOWSIZE;
-    int seq = buffer[idx].seqnum; */
-
+    
     if (timer_status[i] && !acked[i]){
       if (TRACE > 0){
-        printf("----A: Resending packet %d\n", seq);
+        printf("----A: Resending packet %d\n", i);
       }
       tolayer3(A,buffer[i]);
       starttimer(A,RTT + i); /* restart timer */
