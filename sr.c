@@ -137,7 +137,7 @@ void A_input(struct pkt packet)
       timer_status[acknum] = 0; /* stop timer after ACK received*/
       
       if (TRACE > 0) {
-      printf("----A: Marked Packet %d as acknowledged\n", acknum);
+      printf("----A: ACK %d is not a duplicate\n", acknum);
       }
       /* slide window if base is acked */
       while (acked[windowfirst] && windowcount > 0) {
@@ -234,7 +234,7 @@ void B_input(struct pkt packet)
       packets_received++;
 
       if (TRACE > 0) {
-        printf("----B: Packet %d received and buffered\n", seq);
+        printf("----B: Packet %d is correctly received, send ACK!\n", seq);
       }
     } else {
       if (TRACE > 0) {

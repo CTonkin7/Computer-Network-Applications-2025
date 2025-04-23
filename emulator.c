@@ -96,7 +96,7 @@
     double x;                   
     x = rand()/mmm;            /* x should be uniform in [0,1] */
     if (TRACE > 3)
-      printf("RANDOM NUMBER GENERAION CALLED: %f\n", x);
+      printf("RANDOM NUMBER GENERATION CALLED: %f\n", x);
     return(x);
   }  
   
