@@ -176,7 +176,7 @@ void A_timerinterrupt(void)
     printf("----A: Timer Expired, check for packet to resend\n");
   }
 
-  if (!acked[windowfirst]){
+  if (windowcount > 0 && !acked[windowfirst]){
     tolayer3(A,buffer[windowfirst]);
     packets_resent++;
 
@@ -187,6 +187,10 @@ void A_timerinterrupt(void)
     starttimer(A,RTT); /* restart timer */
     
     /*break; send only one packet on timeout */
+  } else {
+    if (TRACE > 0){
+      printf("---A: Timer expired but nothing to resend, not restarting timer\n");
+    }
   }
 }
        
