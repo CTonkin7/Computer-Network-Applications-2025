@@ -74,7 +74,7 @@ void A_output(struct msg message)
 
   /* if not blocked waiting on ACK */
   /* test code */
-  printf("A_output: windowcount = %d, windowfirst = %d, windowlast = %d\n", windowcount, windowfirst, windowlast);
+  /*printf("A_output: windowcount = %d, windowfirst = %d, windowlast = %d\n", windowcount, windowfirst, windowlast);*/
 
 
   if ( windowcount < WINDOWSIZE) {
@@ -187,10 +187,6 @@ void A_timerinterrupt(void)
     starttimer(A,RTT); /* restart timer */
     
     /*break; send only one packet on timeout */
-  } else {
-    if (TRACE > 0){
-      printf("---A: Timer expired but nothing to resend, not restarting timer\n");
-    }
   }
 }
        
