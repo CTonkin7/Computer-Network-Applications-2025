@@ -76,7 +76,6 @@ void A_output(struct msg message)
   /* test code */
   /*printf("A_output: windowcount = %d, windowfirst = %d, windowlast = %d\n", windowcount, windowfirst, windowlast);*/
 
-
   if ( windowcount < WINDOWSIZE) {
     if (TRACE > 0)
       printf("----A: New message arrives, send window is not full, send new messge to layer3!\n");
@@ -173,7 +172,7 @@ void A_timerinterrupt(void)
 {
 
   if (TRACE > 0){
-    printf("----A: Timer Expired, check for packet to resend\n");
+    printf("----A: time out,resend packets!\n");
   }
 
   if (windowcount > 0 && !acked[windowfirst]){
@@ -181,7 +180,7 @@ void A_timerinterrupt(void)
     packets_resent++;
 
     if (TRACE > 0){
-      printf("----A: Resending packet %d\n", windowfirst);
+      printf("----A: resending packet %d\n", windowfirst);
     }
 
     starttimer(A,RTT); /* restart timer */
@@ -243,7 +242,7 @@ void B_input(struct pkt packet)
       }
     } else {
       if (TRACE > 0) {
-        printf("----B: Duplicate packet %d received, resend ACK\n", seq);
+        printf("----B: packet corrupted or not expected sequence number, resend ACK!\n", seq);
       }
     }
     
