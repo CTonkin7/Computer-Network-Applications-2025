@@ -77,7 +77,7 @@ void A_output(struct msg message)
   /*printf("A_output: windowcount = %d, windowfirst = %d, windowlast = %d\n", windowcount, windowfirst, windowlast);*/
 
   if ( windowcount < WINDOWSIZE) {
-    if (TRACE > 0)
+    if (TRACE > 1)
       printf("----A: New message arrives, send window is not full, send new messge to layer3!\n");
 
     /* create packet */
@@ -126,7 +126,6 @@ In this practical this will always be an ACK as B never sends data.
 void A_input(struct pkt packet)
 {
   int old_windowfirst = windowfirst;
-
   int acknum = packet.acknum; /* initialise acknumber variable to current packet*/
   /* if received ACK is not corrupted */ 
   if (!IsCorrupted(packet)) {
@@ -231,8 +230,14 @@ void B_input(struct pkt packet)
 
   /* check for corruption: */
   if (!IsCorrupted(packet)){
+<<<<<<< HEAD
   
     if (!received[seq]){
+=======
+    int seq = packet.seqnum;
+
+    if (!received[seq] && seq ==expectedseqnum ){
+>>>>>>> 5e9d61addddadfc4a6510f3b8aac81363401ddb1
       received[seq] = 1;
       recv_buffer[seq] = packet;
       packets_received++;
@@ -243,7 +248,11 @@ void B_input(struct pkt packet)
     } else {
       
       if (TRACE > 0) {
+<<<<<<< HEAD
         printf("----B: Packet %d is correctly received, send ACK!\n", seq);
+=======
+        printf("----B: packet corrupted or not expected sequence number, resend ACK!\n");
+>>>>>>> 5e9d61addddadfc4a6510f3b8aac81363401ddb1
       }
     }
     
