@@ -77,7 +77,7 @@ void A_output(struct msg message)
   /*printf("A_output: windowcount = %d, windowfirst = %d, windowlast = %d\n", windowcount, windowfirst, windowlast);*/
 
   if ( windowcount < WINDOWSIZE) {
-    if (TRACE > 0)
+    if (TRACE > 1)
       printf("----A: New message arrives, send window is not full, send new messge to layer3!\n");
 
     /* create packet */
@@ -126,7 +126,6 @@ In this practical this will always be an ACK as B never sends data.
 void A_input(struct pkt packet)
 {
   int old_windowfirst = windowfirst;
-
   int acknum = packet.acknum; /* initialise acknumber variable to current packet*/
   /* if received ACK is not corrupted */ 
   if (!IsCorrupted(packet)) {
