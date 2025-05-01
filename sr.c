@@ -179,7 +179,7 @@ void A_timerinterrupt(void)
     packets_resent++;
 
     if (TRACE > 0){
-      printf("----A: resending packet %d\n", windowfirst);
+      printf("---A: resending packet %d\n", windowfirst);
     }
 
     starttimer(A,RTT); /* restart timer */
@@ -231,7 +231,7 @@ void B_input(struct pkt packet)
   if (!IsCorrupted(packet)){
     int seq = packet.seqnum;
 
-    if (!received[seq]){
+    if (!received[seq] && seq ==expectedseqnum ){
       received[seq] = 1;
       recv_buffer[seq] = packet;
       packets_received++;
