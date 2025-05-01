@@ -180,7 +180,7 @@ void A_timerinterrupt(void)
     packets_resent++;
 
     if (TRACE > 0){
-      printf("----A: resending packet %d\n", windowfirst);
+      printf("---A: resending packet %d\n", windowfirst);
     }
 
     starttimer(A,RTT); /* restart timer */
@@ -227,11 +227,11 @@ void B_input(struct pkt packet)
 {
   struct pkt ackpkt;
   int i;
+  int seq = packet.seqnum;
 
   /* check for corruption: */
   if (!IsCorrupted(packet)){
-    int seq = packet.seqnum;
-
+  
     if (!received[seq]){
       received[seq] = 1;
       recv_buffer[seq] = packet;
@@ -241,8 +241,9 @@ void B_input(struct pkt packet)
         printf("----B: Packet %d is correctly received, send ACK!\n", seq);
       }
     } else {
+      
       if (TRACE > 0) {
-        printf("----B: packet corrupted or not expected sequence number, resend ACK!\n", seq);
+        printf("----B: Packet %d is correctly received, send ACK!\n", seq);
       }
     }
     
@@ -263,7 +264,7 @@ void B_input(struct pkt packet)
     }
   } else {
     if (TRACE > 0){
-      printf("----B: Corrupted packet received, no ACK sent\n");
+      printf("----B: packet corrupted or not expected sequence number, resend ACK!\n");
     }
   }
 }
