@@ -233,7 +233,6 @@ void B_input(struct pkt packet)
     ackpkt.seqnum = B_nextseqnum;
     ackpkt.acknum = seq;
 
-    printf()
 
 
     for (i = 0; i < 20; i++) {
@@ -259,7 +258,7 @@ void B_input(struct pkt packet)
     
     while (received[expectedseqnum % SEQSPACE]) {
       tolayer5(B, recv_buffer[expectedseqnum % SEQSPACE].payload);
-      //received[expectedseqnum % SEQSPACE] = 0;
+      received[expectedseqnum % SEQSPACE] = 0;
       expectedseqnum = (expectedseqnum + 1) % SEQSPACE;
     }
   } else {
