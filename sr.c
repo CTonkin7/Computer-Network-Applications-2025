@@ -230,14 +230,9 @@ void B_input(struct pkt packet)
 
   /* check for corruption: */
   if (!IsCorrupted(packet)){
-<<<<<<< HEAD
-  
-    if (!received[seq]){
-=======
     int seq = packet.seqnum;
 
     if (!received[seq] && seq ==expectedseqnum ){
->>>>>>> 5e9d61addddadfc4a6510f3b8aac81363401ddb1
       received[seq] = 1;
       recv_buffer[seq] = packet;
       packets_received++;
@@ -248,11 +243,7 @@ void B_input(struct pkt packet)
     } else {
       
       if (TRACE > 0) {
-<<<<<<< HEAD
-        printf("----B: Packet %d is correctly received, send ACK!\n", seq);
-=======
         printf("----B: packet corrupted or not expected sequence number, resend ACK!\n");
->>>>>>> 5e9d61addddadfc4a6510f3b8aac81363401ddb1
       }
     }
     
