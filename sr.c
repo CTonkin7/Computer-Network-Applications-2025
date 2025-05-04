@@ -34,9 +34,11 @@
 */
 int ComputeChecksum(struct pkt packet)
 {
+  /* Initialise checksum and i variables */
   int checksum = 0;
   int i;
 
+  /* calculazte checksum  */
   checksum = packet.seqnum;
   checksum += packet.acknum;
   for ( i=0; i<20; i++ ) {
@@ -45,6 +47,7 @@ int ComputeChecksum(struct pkt packet)
   return checksum;
 }
 
+/* Check if packet is corrupted using checksum */
 bool IsCorrupted(struct pkt packet)
 {
   return packet.checksum != ComputeChecksum(packet);
@@ -72,11 +75,7 @@ void A_output(struct msg message)
   struct pkt sendpkt;
   int i;
 
-  /* if not blocked waiting on ACK */
-  /* test code */
-  /*printf("A_output: windowcount = %d, windowfirst = %d, windowlast = %d\n", windowcount, windowfirst, windowlast);*/
-
-  if ( windowcount < WINDOWSIZE) {
+  if ( windowcount < WINDOWSIZE) {  /* If current windowcount is less than windowsize, window is not full */
     if (TRACE > 1)
       printf("----A: New message arrives, send window is not full, send new messge to layer3!\n");
 
@@ -84,7 +83,7 @@ void A_output(struct msg message)
     sendpkt.seqnum = A_nextseqnum;
     sendpkt.acknum = NOTINUSE;
     for ( i=0; i<20 ; i++ ) {
-      sendpkt.payload[i] = message.data[i];
+      sendpkt.payload[i] = message.data[i]; /* Input message data into payload, then checksum */
     }
     sendpkt.checksum = ComputeChecksum(sendpkt); 
 
@@ -99,8 +98,8 @@ void A_output(struct msg message)
     if (TRACE > 0){
       printf("Sending packet %d to layer 3\n", sendpkt.seqnum);
     }
-    tolayer3 (A, sendpkt);
-    if (windowcount == 0){
+    tolayer3 (A, sendpkt);  /* Send packet to layer 3 */
+    if (windowcount == 0){  /* if windowcount is zero, start timer */
       starttimer(A,RTT);
     } /* begin timer for packet. */
 
@@ -116,24 +115,22 @@ void A_output(struct msg message)
     window_full++;
   }
 }
-
-
 /* called from layer 3, when a packet arrives for layer 4 
 In this practical this will always be an ACK as B never sends data.
 */
-
 
 void A_input(struct pkt packet)
 {
   int old_windowfirst = windowfirst;
   int acknum = packet.acknum; /* initialise acknumber variable to current packet*/
+
   /* if received ACK is not corrupted */ 
   if (!IsCorrupted(packet)) {
     if (TRACE > 0) {
       printf("----A: uncorrupted ACK %d is received\n",packet.acknum);
     }
     
-    if (!acked[acknum]) {
+    if (!acked[acknum]) { /* check if acknum has been acked */
       acked[acknum] = 1; /* mark received ACK*/
       new_ACKs++;
       timer_status[acknum] = 0; /* stop timer after ACK received*/
@@ -147,20 +144,20 @@ void A_input(struct pkt packet)
         windowcount--;
       }
 
-    
+      /* stop timer if windowfirst variable has changed */
       if (old_windowfirst != windowfirst){
         stoptimer(A);
-        if (windowcount > 0)
+        if (windowcount > 0) /* if windowcount is greater than zero, start timer */
           starttimer(A,RTT);
       } 
 
     } else {
-      if (TRACE > 0)
+      if (TRACE > 0) /* If ack is a duplicate */
         printf("----A: duplicate ACK received for packet %d\n", acknum);
     } 
   }
   else { 
-      if (TRACE > 0)
+      if (TRACE > 0) /* If ACK is corrupted */
         printf ("----A: corrupted ACK is received, do nothing!\n");
     }
 }
@@ -170,25 +167,20 @@ void A_input(struct pkt packet)
 void A_timerinterrupt(void)
 {
 
-  if (TRACE > 0){
+  if (TRACE > 0){ /* Send message when timeout */
     printf("----A: time out,resend packets!\n");
   }
 
-  if (windowcount > 0 && !acked[windowfirst]){
+  if (windowcount > 0 && !acked[windowfirst]){ /* if windowcount is greater than zero and first packet has not been acked, resend packet to layre 3 */
     tolayer3(A,buffer[windowfirst]);
     packets_resent++;
 
     if (TRACE > 0){
       printf("---A: resending packet %d\n", windowfirst);
     }
-
     starttimer(A,RTT); /* restart timer */
-    
-    /*break; send only one packet on timeout */
   }
 }
-       
-
 
 
 /* the following routine will be called once (only) before any other */
@@ -229,38 +221,41 @@ void B_input(struct pkt packet)
   int seq = packet.seqnum;
   /* check for corruption: */
   if (!IsCorrupted(packet)){
-
+    /* initialise packet seq and ack */
     ackpkt.seqnum = B_nextseqnum;
     ackpkt.acknum = seq;
 
     for (i = 0; i < 20; i++) {
-      ackpkt.payload[i] = 0;
+      ackpkt.payload[i] = 0; /* B payload is zero */
     }
-    ackpkt.checksum = ComputeChecksum(ackpkt);
-    tolayer3(B,ackpkt);
-    B_nextseqnum = (B_nextseqnum + 1) % 2;
+    ackpkt.checksum = ComputeChecksum(ackpkt); /* compute checksum of packet */
+
+    if (TRACE > 0) {
+      printf("----B: packet %d is correctly received, send ACK!\n", seq);
+    }
+
+    tolayer3(B,ackpkt); /* send packet to layer3 */
+    B_nextseqnum = (B_nextseqnum + 1) % 2; /* next sequence number */
     
-    if (!received[seq]){
-      received[seq] = 1;
-      recv_buffer[seq] = packet;
+    if (!received[seq]){ /* if the sequence number has not been previously received */
+      received[seq] = 1; /* set received[seq] to 1 */
+      recv_buffer[seq] = packet; 
       packets_received++;
 
-      if (TRACE > 0) {
-        printf("----B: packet %d is correctly received, send ACK!\n", seq);
-      }
     } else {
-      if (TRACE > 0) {
+      if (TRACE > 0) { /* if seq has not been previously received */
         printf("----B: packet %d is correctly received, send ACK!\n", seq);
       }
     }
     
+    /* Checks if packet with expected seq number has been received and is ready to be delivered*/
     while (received[expectedseqnum % SEQSPACE]) {
       tolayer5(B, recv_buffer[expectedseqnum % SEQSPACE].payload);
-      /*received[expectedseqnum % SEQSPACE] = 0;*/
+      received[expectedseqnum % SEQSPACE] = 0;
       expectedseqnum = (expectedseqnum + 1) % SEQSPACE;
     }
   } else {
-    if (TRACE > 0){
+    if (TRACE > 0){ /* if packet is corrupted or not expected seq num */
       printf("----B: packet corrupted or not expected sequence number, resend ACK!\n");
     }
   }
