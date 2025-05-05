@@ -251,7 +251,7 @@ void B_input(struct pkt packet)
     /* Checks if packet with expected seq number has been received and is ready to be delivered*/
     while (received[expectedseqnum % SEQSPACE]) {
       tolayer5(B, recv_buffer[expectedseqnum % SEQSPACE].payload);
-      received[expectedseqnum % SEQSPACE] = 0;
+      /*received[expectedseqnum % SEQSPACE] = 0;*/
       expectedseqnum = (expectedseqnum + 1) % SEQSPACE;
     }
   } else {
